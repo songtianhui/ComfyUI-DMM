@@ -13,7 +13,6 @@ from comfy.ldm.modules.diffusionmodules.openaimodel import (
     ResBlock,
     VideoResBlock,
     apply_control,
-    UNetModel,
 )
 import comfy.patcher_extension
 import comfy.ops
@@ -21,6 +20,7 @@ ops = comfy.ops.disable_weight_init
 
 
 
+# copy and modify from comfy.ldm.modules.diffusionmodules.openaimodel
 class DMMUNetModel(nn.Module):
     """
     The full UNet model with attention and timestep embedding.
@@ -516,7 +516,7 @@ class DMMUNetModel(nn.Module):
         emb = self.time_embed(t_emb)
 
         # model merging modules
-        assert 0 <= self.model_id and self.model_id < self.model_embedding.shape[0]
+        assert 0 <= self.model_id and self.model_id < self.model_embedding.weight.shape[0]
         model_ids = th.LongTensor([self.model_id] * x.shape[0]).to(x.device)    # (b, )
         add_embeds = self.model_embedding(model_ids)                # (b, dim)
         add_embeds = add_embeds.to(dtype=emb.dtype)
@@ -585,8 +585,6 @@ class DMMEmbedding(nn.Module):
         in_channels: int,
         time_embed_dim: int,
         act_fn: str = "silu",
-        out_dim: int = None,
-        cond_proj_dim=None,
     ):
         super().__init__()
         self.linear_1 = nn.Linear(in_channels, time_embed_dim)
