@@ -87,12 +87,15 @@ class DMMLoader:
 class DMMApply:
     @classmethod
     def INPUT_TYPES(s):
+        # NOTE: Hardcode the range number now!
+        # Maybe it should be dynamically adjusted according to the checkpoint's attribute.
+        # But I don't know how to implement this.
         return {"required": {"model": ("MODEL", ),
-                             "index": ("INT", ),}}
+                             "index": (list(range(8)), ),}}
     RETURN_TYPES = ("MODEL", )
     FUNCTION = "apply"
 
-    CATEGORY = "dmm"
+    CATEGORY = "DMM"
 
     def apply(self, model: model_base.BaseModel, index: int):
         # model.model.diffusion_model: DMMUNetModel
