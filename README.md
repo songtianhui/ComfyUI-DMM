@@ -1,1 +1,3 @@
-# WIP
+# ComfyUI-DMM
+
+WIP.
